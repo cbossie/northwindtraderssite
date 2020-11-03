@@ -1,10 +1,10 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Northwind.Persistence.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,10 +13,10 @@ namespace Northwind.Persistence.Migrations
                 columns: table => new
                 {
                     CategoryID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CategoryName = table.Column<string>(maxLength: 15, nullable: false),
-                    Description = table.Column<string>(type: "ntext", nullable: true),
-                    Picture = table.Column<byte[]>(type: "image", nullable: true)
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Picture = table.Column<byte[]>(type: "bytea", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -49,13 +49,18 @@ namespace Northwind.Persistence.Migrations
                 columns: table => new
                 {
                     EmployeeID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(maxLength: 20, nullable: false),
                     FirstName = table.Column<string>(maxLength: 10, nullable: false),
                     Title = table.Column<string>(maxLength: 30, nullable: true),
                     TitleOfCourtesy = table.Column<string>(maxLength: 25, nullable: true),
-                    BirthDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    HireDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    BirthDate = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    HireDate = table.Column<DateTime>(type: "timestamp", nullable: true),
                     Address = table.Column<string>(maxLength: 60, nullable: true),
                     City = table.Column<string>(maxLength: 15, nullable: true),
                     Region = table.Column<string>(maxLength: 15, nullable: true),
@@ -63,8 +68,8 @@ namespace Northwind.Persistence.Migrations
                     Country = table.Column<string>(maxLength: 15, nullable: true),
                     HomePhone = table.Column<string>(maxLength: 24, nullable: true),
                     Extension = table.Column<string>(maxLength: 4, nullable: true),
-                    Photo = table.Column<byte[]>(type: "image", nullable: true),
-                    Notes = table.Column<string>(type: "ntext", nullable: true),
+                    Photo = table.Column<byte[]>(type: "bytea", nullable: true),
+                    Notes = table.Column<string>(type: "text", nullable: true),
                     ReportsTo = table.Column<int>(nullable: true),
                     PhotoPath = table.Column<string>(maxLength: 255, nullable: true)
                 },
@@ -88,8 +93,7 @@ namespace Northwind.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Region", x => x.RegionID)
-                        .Annotation("SqlServer:Clustered", false);
+                    table.PrimaryKey("PK_Region", x => x.RegionID);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,7 +101,7 @@ namespace Northwind.Persistence.Migrations
                 columns: table => new
                 {
                     ShipperID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CompanyName = table.Column<string>(maxLength: 40, nullable: false),
                     Phone = table.Column<string>(maxLength: 24, nullable: true)
                 },
@@ -111,7 +115,7 @@ namespace Northwind.Persistence.Migrations
                 columns: table => new
                 {
                     SupplierID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CompanyName = table.Column<string>(maxLength: 40, nullable: false),
                     ContactName = table.Column<string>(maxLength: 30, nullable: true),
                     ContactTitle = table.Column<string>(maxLength: 30, nullable: true),
@@ -122,7 +126,7 @@ namespace Northwind.Persistence.Migrations
                     Country = table.Column<string>(maxLength: 15, nullable: true),
                     Phone = table.Column<string>(maxLength: 24, nullable: true),
                     Fax = table.Column<string>(maxLength: 24, nullable: true),
-                    HomePage = table.Column<string>(type: "ntext", nullable: true)
+                    HomePage = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,8 +143,7 @@ namespace Northwind.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Territories", x => x.TerritoryID)
-                        .Annotation("SqlServer:Clustered", false);
+                    table.PrimaryKey("PK_Territories", x => x.TerritoryID);
                     table.ForeignKey(
                         name: "FK_Territories_Region",
                         column: x => x.RegionID,
@@ -154,12 +157,16 @@ namespace Northwind.Persistence.Migrations
                 columns: table => new
                 {
                     OrderID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: true),
                     CustomerID = table.Column<string>(maxLength: 5, nullable: true),
                     EmployeeID = table.Column<int>(nullable: true),
-                    OrderDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    RequiredDate = table.Column<DateTime>(type: "datetime", nullable: true),
-                    ShippedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    OrderDate = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    RequiredDate = table.Column<DateTime>(type: "timestamp", nullable: true),
+                    ShippedDate = table.Column<DateTime>(type: "timestamp", nullable: true),
                     ShipVia = table.Column<int>(nullable: true),
                     Freight = table.Column<decimal>(type: "money", nullable: true, defaultValueSql: "((0))"),
                     ShipName = table.Column<string>(maxLength: 40, nullable: true),
@@ -173,13 +180,13 @@ namespace Northwind.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderID);
                     table.ForeignKey(
-                        name: "FK_Orders_Customers",
+                        name: "FK_Orders_Customers_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "Customers",
                         principalColumn: "CustomerID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Orders_Employees",
+                        name: "FK_Orders_Employees_EmployeeID",
                         column: x => x.EmployeeID,
                         principalTable: "Employees",
                         principalColumn: "EmployeeID",
@@ -197,7 +204,11 @@ namespace Northwind.Persistence.Migrations
                 columns: table => new
                 {
                     ProductID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: true),
                     ProductName = table.Column<string>(maxLength: 40, nullable: false),
                     SupplierID = table.Column<int>(nullable: true),
                     CategoryID = table.Column<int>(nullable: true),
@@ -212,13 +223,13 @@ namespace Northwind.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Products", x => x.ProductID);
                     table.ForeignKey(
-                        name: "FK_Products_Categories",
+                        name: "FK_Products_Categories_CategoryID",
                         column: x => x.CategoryID,
                         principalTable: "Categories",
                         principalColumn: "CategoryID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Products_Suppliers",
+                        name: "FK_Products_Suppliers_SupplierID",
                         column: x => x.SupplierID,
                         principalTable: "Suppliers",
                         principalColumn: "SupplierID",
@@ -234,8 +245,7 @@ namespace Northwind.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeTerritories", x => new { x.EmployeeID, x.TerritoryID })
-                        .Annotation("SqlServer:Clustered", false);
+                    table.PrimaryKey("PK_EmployeeTerritories", x => new { x.EmployeeID, x.TerritoryID });
                     table.ForeignKey(
                         name: "FK_EmployeeTerritories_Employees",
                         column: x => x.EmployeeID,
@@ -256,6 +266,10 @@ namespace Northwind.Persistence.Migrations
                 {
                     OrderID = table.Column<int>(nullable: false),
                     ProductID = table.Column<int>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false),
+                    LastModifiedBy = table.Column<string>(nullable: true),
+                    LastModified = table.Column<DateTime>(nullable: true),
                     UnitPrice = table.Column<decimal>(type: "money", nullable: false),
                     Quantity = table.Column<short>(nullable: false, defaultValueSql: "((1))"),
                     Discount = table.Column<float>(nullable: false)

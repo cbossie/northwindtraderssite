@@ -25,7 +25,7 @@ namespace Northwind.Infrastructure
             services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("NorthwindDatabase")));
+                options.UseNpgsql(configuration.GetConnectionString("NorthwindPostgreDatabase")));
 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();

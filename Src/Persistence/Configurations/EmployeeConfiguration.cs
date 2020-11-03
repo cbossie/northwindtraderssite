@@ -12,7 +12,7 @@ namespace Northwind.Persistence.Configurations
 
             builder.Property(e => e.Address).HasMaxLength(60);
 
-            builder.Property(e => e.BirthDate).HasColumnType("datetime");
+            builder.Property(e => e.BirthDate).HasColumnType("timestamp");
 
             builder.Property(e => e.City).HasMaxLength(15);
 
@@ -24,7 +24,7 @@ namespace Northwind.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(10);
 
-            builder.Property(e => e.HireDate).HasColumnType("datetime");
+            builder.Property(e => e.HireDate).HasColumnType("timestamp");
 
             builder.Property(e => e.HomePhone).HasMaxLength(24);
 
@@ -32,9 +32,9 @@ namespace Northwind.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
-            builder.Property(e => e.Notes).HasColumnType("ntext");
+            builder.Property(e => e.Notes).HasColumnType("text");
 
-            builder.Property(e => e.Photo).HasColumnType("image");
+            builder.Property(e => e.Photo).HasColumnType("bytea");
 
             builder.Property(e => e.PhotoPath).HasMaxLength(255);
 

@@ -20,9 +20,9 @@ namespace Northwind.Persistence.Configurations
                 .HasColumnType("money")
                 .HasDefaultValueSql("((0))");
 
-            builder.Property(e => e.OrderDate).HasColumnType("datetime");
+            builder.Property(e => e.OrderDate).HasColumnType("timestamp");
 
-            builder.Property(e => e.RequiredDate).HasColumnType("datetime");
+            builder.Property(e => e.RequiredDate).HasColumnType("timestamp");
 
             builder.Property(e => e.ShipAddress).HasMaxLength(60);
 
@@ -36,7 +36,7 @@ namespace Northwind.Persistence.Configurations
 
             builder.Property(e => e.ShipRegion).HasMaxLength(15);
 
-            builder.Property(e => e.ShippedDate).HasColumnType("datetime");
+            builder.Property(e => e.ShippedDate).HasColumnType("timestamp");
 
             builder.HasOne(d => d.Shipper)
                 .WithMany(p => p.Orders)

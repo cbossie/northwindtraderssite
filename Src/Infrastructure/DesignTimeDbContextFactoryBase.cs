@@ -9,7 +9,7 @@ namespace Northwind.Infrastructure
     public abstract class DesignTimeDbContextFactoryBase<TContext> :
         IDesignTimeDbContextFactory<TContext> where TContext : DbContext
     {
-        private const string ConnectionStringName = "NorthwindDatabase";
+        private const string ConnectionStringName = "NorthwindPostgreDatabase";
         private const string AspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
 
         public TContext CreateDbContext(string[] args)
@@ -29,6 +29,7 @@ namespace Northwind.Infrastructure
                 .AddJsonFile($"appsettings.Local.json", optional: true)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
                 .AddEnvironmentVariables()
+                .AddSystemsManager("/Northwind")
                 .Build();
 
             var connectionString = configuration.GetConnectionString(ConnectionStringName);
@@ -47,7 +48,7 @@ namespace Northwind.Infrastructure
 
             var optionsBuilder = new DbContextOptionsBuilder<TContext>();
 
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseNpgsql(connectionString);
 
             return CreateNewInstance(optionsBuilder.Options);
         }

@@ -67,6 +67,8 @@ namespace Northwind.WebUI
                         }
                     }
 
+                    config.AddSystemsManager("/Northwind");
+                    
                     config.AddEnvironmentVariables();
 
                     if (args != null)
